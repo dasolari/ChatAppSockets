@@ -9,7 +9,7 @@ services:
             - /usr/src/server/node_modules
             - ./:/usr/src/server
         ports:
-            - "5000:5000"
+            - "8080:8080"
         command:
             "npm run start"
     nginx:

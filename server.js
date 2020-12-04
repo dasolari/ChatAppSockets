@@ -2,13 +2,30 @@
 const express = require('express');
 const app = express();
 const server = require('http').Server(app);
-const io = require('socket.io')(server);
 const cors = require('cors');
-const PORT = 5000;
+const PORT = 8080;
 
+const io = require('socket.io')(server, {
+  cors: {
+    origin: 'http://localhost:3000',
+    methods: ['GET', 'POST'],
+    headers: 'X-Requested-With,content-type',
+    credentials: true
+  },
+  transports: ['websocket']
+});
+
+// Cors
 app.use(cors());
 
+// Body Parser Middleware
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+
 const users = {};
+  
+// Run server
+server.listen(PORT, () => console.log(`Socket server started on port ${PORT}`));
 
 // Socket connection code start
 io.on('connection', (socket) => {
@@ -46,6 +63,3 @@ io.on('connection', (socket) => {
     }
   });
 });
-  
-// Run server
-server.listen(PORT, () => console.log(`Socket server started on port ${PORT}`));
