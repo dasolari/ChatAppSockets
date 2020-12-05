@@ -7,12 +7,12 @@ const PORT = 8080;
 
 const io = require('socket.io')(server, {
   cors: {
-    origin: 'http://nuestrochatg8.ml.s3-website-us-east-1.amazonaws.com/',
+    origin: 'http://localhost:3000',
     methods: ['GET', 'POST'],
     headers: 'X-Requested-With,content-type',
     credentials: true
   },
-  transports: ['websocket']
+  transports: ['polling']
 });
 
 // Cors
@@ -23,9 +23,6 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 const users = {};
-  
-// Run server
-server.listen(PORT, () => console.log(`Socket server started on port ${PORT}`));
 
 // Socket connection code start
 io.on('connection', (socket) => {
@@ -38,7 +35,7 @@ io.on('connection', (socket) => {
   socket.on('send-chat-message', (data) => {
     const user = JSON.parse(data.user);
     const chatRoom = JSON.parse(data.chatRoom);
-    socket.to(chatRoom.id).emit('chat-message', { message: data.message, name: user.userName, userId: user.userId });
+    socket.to(chatRoom.id).emit('chat-message', { message: data.message, name: user.userName, userId: user.id });
   });
   socket.on('started-typing', (data) => {
     const { userName, chatRoomId }  = data;
@@ -63,3 +60,6 @@ io.on('connection', (socket) => {
     }
   });
 });
+
+// Run server
+server.listen(PORT, () => console.log(`Socket server started on port ${PORT}`));
