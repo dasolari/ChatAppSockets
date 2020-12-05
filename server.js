@@ -29,25 +29,25 @@ io.on('connection', (socket) => {
   socket.on('new-connection', (data) => {
     const { userName, chatRoomId }  = data;
     users[socket.id] = { chatRoomId, userName };
-    socket.join(chatRoomId);
-    socket.to(chatRoomId).emit('user-joined', userName);
+    socket.join(String(chatRoomId));
+    socket.to(String(chatRoomId)).emit('user-joined', userName);
   });
   socket.on('send-chat-message', (data) => {
     const user = JSON.parse(data.user);
     const chatRoom = JSON.parse(data.chatRoom);
-    socket.to(chatRoom.id).emit('chat-message', { message: data.message, name: user.userName, userId: user.id });
+    socket.to(String(chatRoom.id)).emit('chat-message', { message: data.message, name: user.userName, userId: user.id });
   });
   socket.on('started-typing', (data) => {
-    const { userName, chatRoomId }  = data;
-    socket.to(chatRoomId).emit('user-is-typing', userName);
+    const { userName, chatRoomId } = data;
+    socket.to(String(chatRoomId)).emit('user-is-typing', userName);
   });
   socket.on('finished-typing', (data) => {
-    const { userName, chatRoomId }  = data;
-    socket.to(chatRoomId).emit('user-stopped-typing', userName);
+    const { userName, chatRoomId } = data;
+    socket.to(String(chatRoomId)).emit('user-stopped-typing', userName);
   });
   socket.on('ban-user', (data) => {
     const chatRoom = JSON.parse(data.chatRoom);
-    socket.to(chatRoom.id).emit('ban', data.userName);
+    socket.to(String(chatRoom.id)).emit('ban', data.userName);
   });
   socket.on('disconnect', function() {
     try {
