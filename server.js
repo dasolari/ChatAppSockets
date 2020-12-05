@@ -7,7 +7,7 @@ const PORT = 8080;
 
 const io = require('socket.io')(server, {
   cors: {
-    origin: 'http://localhost:3000',
+    origin: 'http://nuestrochatg8.ml.s3-website-us-east-1.amazonaws.com/',
     methods: ['GET', 'POST'],
     headers: 'X-Requested-With,content-type',
     credentials: true
@@ -38,7 +38,7 @@ io.on('connection', (socket) => {
   socket.on('send-chat-message', (data) => {
     const user = JSON.parse(data.user);
     const chatRoom = JSON.parse(data.chatRoom);
-    socket.to(chatRoom.id).emit('chat-message', { message: data.message, name: user.userName, userId: user.id });
+    socket.to(chatRoom.id).emit('chat-message', { message: data.message, name: user.userName, userId: user.userId });
   });
   socket.on('started-typing', (data) => {
     const { userName, chatRoomId }  = data;
