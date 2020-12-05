@@ -7,7 +7,7 @@ const PORT = 8080;
 
 const io = require('socket.io')(server, {
   cors: {
-    origin: 'http://localhost:3000',
+    origin: '*',
     methods: ['GET', 'POST'],
     headers: 'X-Requested-With,content-type',
     credentials: true
