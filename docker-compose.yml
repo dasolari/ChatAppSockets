@@ -42,7 +42,7 @@ services:
             - web-root:/var/www/html
         depends_on:
             - server
-        command: certonly --webroot --webroot-path=/var/www/html --email dasolari@uc.cl --agree-tos --no-eff-email --staging -d ec2-100-26-219-98.compute-1.amazonaws.com  -d www.ec2-100-26-219-98.compute-1.amazonaws.com
+        command: certonly --webroot --webroot-path=/var/www/html --email dasolari@uc.cl --agree-tos --no-eff-email --staging -d socketsadmin.tk  -d www.socketsadmin.tk
 
 volumes:
     certbot-etc:
@@ -51,7 +51,7 @@ volumes:
         driver: local
         driver_opts:
             type: none
-            device: /home/diego/ChatAppSockets/views/
+            device: /
             o: bind
 
 networks:
