@@ -12,14 +12,48 @@ services:
             - "8080:8080"
         command:
             "npm run start"
+        networks:
+            - app-network
+
     nginx:
         image: nginx:1.13
         container_name: socket-server-nginx
+        restart: unless-stopped
         ports: 
             - "80:80"
         volumes: 
+            - web-root:/var/www/html
             - ./nginx:/etc/nginx/conf.d
+            - certbot-etc:/etc/letsencrypt
+            - certbot-var:/var/lib/letsencrypt
         depends_on: 
             - server
+        networks:
+            - app-network
         logging: 
             driver: json-file
+
+    certbot:
+        image: certbot/certbot
+        container_name: certbot
+        volumes:
+            - certbot-etc:/etc/letsencrypt
+            - certbot-var:/var/lib/letsencrypt
+            - web-root:/var/www/html
+        depends_on:
+            - server
+        command: certonly --webroot --webroot-path=/var/www/html --email dasolari@uc.cl --agree-tos --no-eff-email --staging -d ec2-100-26-219-98.compute-1.amazonaws.com  -d www.ec2-100-26-219-98.compute-1.amazonaws.com
+
+volumes:
+    certbot-etc:
+    certbot-var:
+    web-root:
+        driver: local
+        driver_opts:
+            type: none
+            device: /home/diego/ChatAppSockets/views/
+            o: bind
+
+networks:
+    app-network:
+        driver: bridge
